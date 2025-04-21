@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>gphoto2 on the Web</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/purecss@2.0.6/build/pure-min.css"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        display: flex;
+        height: 100vh;
+      }
+
+      .center {
+        margin: auto;
+        text-align: center;
+      }
+
+      #config {
+        overflow-y: auto;
+        max-height: 100vh;
+        padding-left: 5px;
+        box-sizing: border-box;
+        border-left: 3px solid #777;
+      }
+
+      #config .pure-button {
+        margin: 1px;
+        width: 20ch;
+      }
+
+      #config label {
+        width: 40%;
+      }
+
+      #config input,
+      #config select {
+        width: 50%;
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "web-gphoto2": "https://unpkg.com/web-gphoto2@0.4.1/build/camera.js",
+          "preact": "https://unpkg.com/preact@10.6.4/dist/preact.module.js",
+          "preact/debug": "https://unpkg.com/preact@10.6.4/debug/dist/debug.module.js",
+          "preact/devtools": "https://unpkg.com/preact@10.6.4/devtools/dist/devtools.module.js",
+          "stats.js": "https://unpkg.com/stats.js@0.17.0/src/Stats.js"
+        }
+      }
+    </script>
+    <script type="module">
+      try {
+        if (!('usb' in navigator)) {
+          throw new Error('WebUSB is unsupported');
+        }
+        await import('./index.js');
+      } catch (e) {
+        console.error(e);
+        await import('./index-fallback.js');
+      }
+    </script>
+    <link
+      rel="icon"
+      href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 0 110 100"><text y=".9em" font-size="90">📷</text></svg>'
+    />
+  </head>
+  <body>
+    <div class="center">⌛ Loading...</div>
+  </body>
+</html>

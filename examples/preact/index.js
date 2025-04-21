@@ -84,7 +84,36 @@ class App extends Component {
     }
     let triggerCapture;
     if (supportedOps.captureImage) {
-      triggerCapture = () => camera.captureImageAsFile();
+      triggerCapture = () =>
+        // camera.captureImageAsFile();
+        {
+          let numOfShots = 2;
+          let wait1000ms = new Promise(resolve => setTimeout(resolve, 1000));
+          let waitForCapture = () => {
+            return wait1000ms.then(() => {
+              return new Promise((resolve, reject) => {
+                camera
+                  .captureImageAsFile()
+                  .then(() => {
+                    resolve();
+                  })
+                  .catch(err => {
+                    reject(err);
+                  });
+              });
+            });
+          };
+          for (let i = 0; i < numOfShots; i++) {
+            waitForCapture()
+              .then(() => {
+                console.log('Image captured');
+              })
+              .catch(err => {
+                console.error('Error capturing image:', err);
+              });
+          }
+          //
+        };
     }
     // We should reach this only once.
     while (this.camera) {
@@ -133,31 +162,31 @@ class App extends Component {
       case 'CameraPicker':
         return h(
           'div',
-            {
-              class: 'center'
-            },
-            h('input', {
-              type: 'button',
-              onclick: this.selectDevice,
-              value: '🔍 Select camera'
-            }),
+          {
+            class: 'center'
+          },
+          h('input', {
+            type: 'button',
+            onclick: this.selectDevice,
+            value: '🔍 Select camera'
+          }),
+          h(
+            'p',
+            null,
+            "Don't know how you got here? Check out the ",
             h(
-              'p',
-              null,
-              "Don't know how you got here? Check out the ",
-              h(
-                'a',
-                { href: 'https://web.dev/porting-libusb-to-webusb/' },
-                'blog post'
-              ),
-              ' or the ',
-              h(
-                'a',
-                { href: 'https://github.com/GoogleChromeLabs/web-gphoto2' },
-                'repo'
-              ),
-              '!'
-            )
+              'a',
+              { href: 'https://web.dev/porting-libusb-to-webusb/' },
+              'blog post'
+            ),
+            ' or the ',
+            h(
+              'a',
+              { href: 'https://github.com/GoogleChromeLabs/web-gphoto2' },
+              'repo'
+            ),
+            '!'
+          )
         );
       case 'Status':
         return h('div', { class: 'center' }, state.message);
